@@ -25,3 +25,12 @@ qwen3-4b-sft-merged-final/
 results_8bit/
 
 results_8bit_new/
+
+results_8bit_new_with_reasoning/
+
+qwen3-4b-sft-merged-final--with-reasoning/
+
+qwen3-4b-sft-lora-adapter-8bit-with-reasoning/
+
+
+
