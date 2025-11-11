@@ -1,0 +1,12 @@
+{"sentence": "APT39 primarily leverages the SEAWEED and CACHEMONEY backdoors along with a specific variant of the POWBAT backdoor."}
+{"sentence": "Government entities targeting suggests a potential secondary intent to collect geopolitical data that may benefit nation-state decision making."}
+{"sentence": "Initial\tCompromise For initial compromise, FireEye Intelligence has observed APT39 leverage spear phishing emails with malicious attachments and/or hyperlinks typically resulting in a POWBAT infection."}
+{"sentence": "APT39 frequently registers and leverages domains that masquerade as legitimate web services and organizations that are relevant to the intended target."}
+{"sentence": "Furthermore, this group has routinely identified and exploited vulnerable web servers of targeted organizations to install web shells, such as ANTAK and ASPXSPY, and used stolen legitimate credentials to compromise externally facing Outlook Web Access (OWA) resources."}
+{"sentence": "Establish\tFoothold,\tEscalate\tPrivileges,\tand\tInternal\tReconnaissance Post-compromise, APT39 leverages custom backdoors such as SEAWEED, CACHEMONEY, and a unique variant of POWBAT to establish a foothold in a target environment."}
+{"sentence": "During privilege escalation, freely available tools such as Mimikatz and Ncrack have been observed, in addition to legitimate tools such as Windows Credential Editor and ProcDump."}
+{"sentence": "Internal reconnaissance has been performed using custom scripts and both freely available and custom tools such as the port scanner, BLUETORCH."}
+{"sentence": "Lateral\tMovement,\tMaintain\tPresence,\tand\tComplete\tMission APT39 facilitates lateral movement through myriad tools such as Remote Desktop Protocol (RDP), Secure Shell (SSH), PsExec, RemCom, and xCmdSvc."}
+{"sentence": "Custom tools such as REDTRIP, PINKTRIP, and BLUETRIP have also been used to create SOCKS5 proxies between infected hosts."}
+{"sentence": "In addition to using RDP for lateral movement, APT39 has used this protocol to maintain persistence in a victim environment."}
+{"sentence": "To complete its mission, APT39 typically archives stolen data with compression tools such as WinRAR or 7-Zip."}

@@ -1,0 +1,13 @@
+sentence,pred_ttp_id,pred_ttp_name,confidence
+APT39 primarily leverages the SEAWEED and CACHEMONEY backdoors along with a specific variant of the POWBAT backdoor.,T1505,Server Software Component,0.9
+Government entities targeting suggests a potential secondary intent to collect geopolitical data that may benefit nation-state decision making.,T1593,Gather Victim Network Information,0.9
+"Initial	Compromise For initial compromise, FireEye Intelligence has observed APT39 leverage spear phishing emails with malicious attachments and/or hyperlinks typically resulting in a POWBAT infection.",T1566,Phishing,0.9
+APT39 frequently registers and leverages domains that masquerade as legitimate web services and organizations that are relevant to the intended target.,T1583,Acquire Infrastructure,0.9
+"Furthermore, this group has routinely identified and exploited vulnerable web servers of targeted organizations to install web shells, such as ANTAK and ASPXSPY, and used stolen legitimate credentials to compromise externally facing Outlook Web Access (OWA) resources.",T1190,Exploit Public-Facing Application,0.9
+"Establish	Foothold,	Escalate	Privileges,	and	Internal	Reconnaissance Post-compromise, APT39 leverages custom backdoors such as SEAWEED, CACHEMONEY, and a unique variant of POWBAT to establish a foothold in a target environment.",T1105,Create or Modify System Process,0.9
+"During privilege escalation, freely available tools such as Mimikatz and Ncrack have been observed, in addition to legitimate tools such as Windows Credential Editor and ProcDump.",T1068,Exploitation for Privilege Escalation,0.9
+"Internal reconnaissance has been performed using custom scripts and both freely available and custom tools such as the port scanner, BLUETORCH.",T1190,Active Scanning,0.9
+"Lateral	Movement,	Maintain	Presence,	and	Complete	Mission APT39 facilitates lateral movement through myriad tools such as Remote Desktop Protocol (RDP), Secure Shell (SSH), PsExec, RemCom, and xCmdSvc.",T1021,Remote Services,0.9
+"Custom tools such as REDTRIP, PINKTRIP, and BLUETRIP have also been used to create SOCKS5 proxies between infected hosts.",T1090,Proxy,0.9
+"In addition to using RDP for lateral movement, APT39 has used this protocol to maintain persistence in a victim environment.",T1021,Remote Services,0.9
+"To complete its mission, APT39 typically archives stolen data with compression tools such as WinRAR or 7-Zip.",T1560,Archive Collected Data,0.9

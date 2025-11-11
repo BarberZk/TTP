@@ -1,0 +1,115 @@
+{"sentence": "Dubbed Operation Cobalt Kitty, the APT targeted a global corporation based in Asia with the goal of stealing proprietary business information. The threat actor targeted the company’s top-level management by using spear-phishing attacks as the initial penetration vector, ultimately compromising the computers of vice presidents, senior directors and other key personnel in the operational departments. During Operation Cobalt Kitty, the attackers compromised more than 40 PCs and servers, including the domain controller, file servers, Web application server and database server."}
+{"sentence": "The attackers arsenal consisted of modified publicly-available tools as well as six undocumented custom-built tools, which Cybereason considers the threat actor’s signature tools. Among these tools are two backdoors that exploited DLL sideloading attack in Microsoft, Google and Kaspersky applications. In addition, they developed a novel and stealthy backdoor that targets Microsoft Outlook for command-and-control channel and data exfiltration."}
+{"sentence": "Cybereason also attributes the recently reported Backdoor.Win32.Denis to the OceanLotus Group, which at the time of this report’s writing, had not been officially linked to this threat actor."}
+{"sentence": "Finally, this report offers a rare glimpse into what a cyber espionage APT looks like \"under-the-hood\". Cybereason was able to monitor and detect the entire attack lifecycle, from infiltration to exfiltration and all the steps in between."}
+{"sentence": "Phase one: Fileless operation (PowerShell and Cobalt Strike payloads)."}
+{"sentence": "Based on the forensic evidence collected from the environment, phase one was the continuation of the original attack that began about a year before Cybereason was deployed in the environment. During that phase, the threat actor operated a fileless PowerShell-based infrastructure, using customized PowerShell payloads taken from known offensive frameworks such as Cobalt Strike, PowerSploit and Nishang."}
+{"sentence": "The initial penetration vector was carried out by social engineering. Carefully selected group of employees received spear-phishing emails, containing either links to malicious sites or weaponized Word documents. These documents contained malicious macros that created persistence on the compromised machine using two scheduled tasks, whose purpose was to download secondary payloads (mainly Cobalt Strike Beacon):."}
+{"sentence": "Scheduled task 1: Downloads a COM scriptlet that redirects to Cobalt Strike payload:."}
+{"sentence": "Scheduled task 2: Uses Javascript to download a Cobalt Strike Beacon:."}
+{"sentence": "Fileless payload delivery infrastructure."}
+{"sentence": "In the first phase of the attack, the attackers used a fileless in-memory payload delivery infrastructure consisting of the following components:."}
+{"sentence": "VBS and PowerShell-based loaders."}
+{"sentence": "The attackers dropped Visual Basic and PowerShell scripts in folders that they created under the ProgramData (a hidden folder, by default). The attackers created persistence using Windows’ registry, services and scheduled tasks. This persistence mechanism ensured that the loader scripts would execute either at startup or at predetermined intervals."}
+{"sentence": "Values found in Windows’ Registry: the VBS scripts are executed by Windows’ Wscript at startup:."}
+{"sentence": "The .vbs scripts as well as the .txt files contain the loader’s script, which launches PowerShell with a base64 encoded command, which either loads another PowerShell script (e.g Cobalt Strike Beacon) or fetches a payload from the command-and-control (C&C) server:."}
+{"sentence": "In-memory fileless payloads from C&C servers."}
+{"sentence": "The payloads served by the C&C servers are mostly PowerShell scripts with embedded base64-encoded payloads (Metasploit and Cobalt Strike payloads):."}
+{"sentence": "Example 1: PowerShell payload with embedded Shellcode downloading Cobalt Strike Beacon."}
+{"sentence": "The decoded payload is a shellcode, whose purpose is to retrieve a Cobalt Strike Beacon from the C&C server:."}
+{"sentence": "Example 2: Cobalt Strike Beacon embedded in obfuscated PowerShell."}
+{"sentence": "A second type of an obfuscated PowerShell payload consisted of Cobalt Strike’s Beacon payload:."}
+{"sentence": "Less than 48 hours after Cybereason alerted the company about the breach, the attackers started to change their approach and almost completely abandoned the PowerShell infrastructure that they had been using - replacing it with sophisticated custom-built backdoors. The attackers’ remarkable ability to quickly adapt demonstrated their skill and familiarity with and command of the company’s network and its operations."}
+{"sentence": "The attackers most likely replaced the PowerShell infrastructure after the company used both Windows Group Policy Object (GPO) and Cybereason’s execution prevention feature to prevent PowerShell execution."}
+{"sentence": "Phase two: Backdoors exploiting DLL-hijacking and using DNS tunneling."}
+{"sentence": "After realizing that the PowerShell infrastructure had been discovered, the attackers had to quickly replace it to maintain persistence and continue the operation. Replacing this infrastructure in 48 hours suggests that the threat actors were prepared for such a scenario."}
+{"sentence": "During the second phase of the attack, the attackers introduced two sophisticated backdoors that they attempted to deploy on selected targets. The introduction of the backdoors is a key turning point in the investigation since it demonstrated the threat actor’s resourcefulness and skill-set."}
+{"sentence": "At the time of the attack, these backdoors were undetected and undocumented by any security vendor. Recently, Kaspersky researchers identified a variant of one of the backdoors as Backdoor.Win32.Denis. The attackers had to make sure that they remained undetected so the backdoors were designed to be as stealthy as possible. To avoid being discovered, the malware authors used these techniques:."}
+{"sentence": "Backdoors exploiting DLL hijacking against trusted applications."}
+{"sentence": "The backdoor exploited a vulnerability called “DLL hijacking” in order to “hide” the malware inside trusted software. This technique exploits a security vulnerability found in legitimate software, which allows the attackers to load a fake DLL and execute its malicious code."}
+{"sentence": "Please see an analysis of the backdoors in the Attacker’s Arsenal section."}
+{"sentence": "By exploiting legitimate software, the attackers bypassed application whitelisting and legitimate security software, allowing them to continue their operations without raising any suspicions."}
+{"sentence": "DNS Tunneling as C2 channel."}
+{"sentence": "In attempt to overcome network filtering solutions, the attackers implemented a stealthier C2 communication method, using “DNS Tunneling” – a method of C2 communicating and data exfiltration using the DNS protocol. To ensure that the DNS traffic would not be filtered, the attackers configured the backdoor to communicate with Google and OpenDNS DNS servers, since most organizations and security products will not filter traffic to those two major DNS services."}
+{"sentence": "The screenshot below shows the traffic generated by the backdoor and demonstrates DNS Tunneling for C2 communication. As shown, while the destination IP is “8.8.8.8” – Google’s DNS server – the malicious domain is “hiding” inside the DNS packet:."}
+{"sentence": "Phase three: Novel MS Outlook backdoor and lateral movement spree."}
+{"sentence": "In the third phase of the operation, the attackers harvested credentials stored on the compromised machines and performed lateral movement and infected new machines. The attackers also introduced a very rare and stealthy technique to communicate with their servers and exfiltrate data using Microsoft Outlook."}
+{"sentence": "Outlook macro backdoor."}
+{"sentence": "In a relentless attempt to remain undetected, the attackers devised a very stealthy C2 channel that is hard to detect since it leverages an email-based C2 channel. The attackers installed a backdoor macro in Microsoft Outlook that enabled them to execute commands, deploy their tools and steal valuable data from the compromised machines."}
+{"sentence": "For a detailed analysis of the Outlook backdoor, please see the Attacker’s Arsenal section."}
+{"sentence": "The malicious macro scans the victim’s Outlook inbox and looks for the strings “$$cpte” and “$$ecpte”."}
+{"sentence": "Then the macro will open a CMD shell that will execute whatever instruction / command is in between the strings."}
+{"sentence": "The macro deletes the message from inbox to ensure minimal risk of exposure."}
+{"sentence": "The macro searches for the special strings in the “Deleted Items” folder to find the attacker’s email address and sends the data back to the attackers via email."}
+{"sentence": "Lastly, the macro will delete any evidence of the emails received or sent by the attackers."}
+{"sentence": "Credential dumping and lateral movement."}
+{"sentence": "The attackers used the famous Mimikatz credential dumping tool as their main tool to obtain credentials including user passwords, NTLM hashes and Kerberos tickets. Mimikatz is a very popular tool and is detected by most antivirus vendors and other security products. Therefore, the attackers used over 10 different customized Mimikatz payloads, which were obfuscated and packed in a way that allowed them to evade antivirus detection."}
+{"sentence": "The following are examples of Mimikatz command line arguments detected during the attack:."}
+{"sentence": "The stolen credentials were used to infect more machines, leveraging Windows built-in tools as well as pass-the-ticket and pass-the-hash attacks."}
+{"sentence": "Phase four: New arsenal and attempt to restore PowerShell infrastructure."}
+{"sentence": "After a four week lull and no apparent malicious activity, the attackers returned to the scene and introduced new and improved tools aimed at bypassing the security mitigations that were implemented by the company’s IT team. These tools and methods mainly allowed them to bypass the PowerShell execution restrictions and password dumping mitigations."}
+{"sentence": "During that phase, Cybereason found a compromised server that was used as the main attacking machine, where the attackers stored their arsenal in a network share, which made it easier to spread their tools to other machines on the network. The attackers’ arsenal consisted:."}
+{"sentence": "New variants of Denis and Goopy backdoors."}
+{"sentence": "PowerShell Restriction Bypass Tool - Adapted from PSUnlock Github project."}
+{"sentence": "PowerShell Cobalt Strike Beacon - New payload + new C2 domain."}
+{"sentence": "PowerShell Obfuscator - All the new PowerShell payloads are obfuscated using a publicly available script adapted from a Daniel Bohannon’s GitHub project."}
+{"sentence": "HookPasswordChange - Inspired by tools found on GitHub, this tool alerts the attackers if a password has been changed. Using this tool, the attackers could overcome a password reset. The attackers modified their tool."}
+{"sentence": "Customized Windows Credentials Dumper - A PowerShell password dumper that is based on a known password dumping tool, using PowerShell bypass and reflective loading. The attackers specifically used it to obtain Outlook passwords."}
+{"sentence": "Customized Outlook Credentials Dumper - Inspired by known Outlook credentials dumpers."}
+{"sentence": "Mimikatz - PowerShell and Binary versions, with multiple layers of obfuscation."}
+{"sentence": "An analysis of this arsenal shows that the attackers went out of their way to restore the PowerShell-based infrastructure, even though it had already been detected and shut down once. The attackers’ preference to use a fileless infrastructure specifically in conjunction with Cobalt Strike is very evident. This could suggest that the attackers preferred to use known tools that are more expendable rather than using their own custom-built tools, which were used as a last resort."}
+{"sentence": "New backdoor (“Goopy”) using HTTP and DNS Tunneling for C2 communication."}
+{"sentence": "Undocumented backdoor that used Outlook for C2 communication and data exfiltration."}
+{"sentence": "Backdoors exploiting DLL sideloading attacks in legitimate applications from Microsoft, Google and Kaspersky."}
+{"sentence": "Three customized credential dumping tools, which are inspired by known tools."}
+{"sentence": "In addition, Cybereason uncovered new variants of the “Denis” backdoor and managed to attribute the backdoor to the OceanLotus Group - a connection that had not been publicly reported before."}
+{"sentence": "This report provides a rare deep dive into a sophisticated APT that was carried out by one of the most fascinating groups operating in Asia. The ability to closely monitor and detect the stages of an entire APT lifecycle - from initial infiltration to data exfiltration - is far from trivial."}
+{"sentence": "The threat actor targeted the company’s top-level management by using spear-phishing attacks as the initial penetration vector, ultimately compromising the computers of vice presidents, senior directors and other key personnel in the operational departments."}
+{"sentence": "Among these tools are two backdoors that exploited DLL sideloading attack in Microsoft, Google and Kaspersky applications."}
+{"sentence": "In addition, they developed a novel and stealthy backdoor that targets Microsoft Outlook for command-and-control channel and data exfiltration."}
+{"sentence": "Cybereason was able to monitor and detect the entire attack lifecycle, from infiltration to exfiltration and all the steps in between."}
+{"sentence": "Fileless operation (PowerShell and Cobalt Strike payloads) Based on the forensic evidence collected from the environment, phase one was the continuation of the original attack that began about a year before Cybereason was deployed in the environment."}
+{"sentence": "During that phase, the threat actor operated a fileless PowerShell-based infrastructure, using customized PowerShell payloads taken from known offensive frameworks such as Cobalt Strike, PowerSploit and Nishang."}
+{"sentence": "The initial penetration vector was carried out by social engineering."}
+{"sentence": "Carefully selected group of employees received spear-phishing emails, containing either links to malicious sites or weaponized Word documents."}
+{"sentence": "These documents contained malicious macros that created persistence on the compromised machine using two scheduled tasks, whose purpose was to download secondary payloads (mainly Cobalt Strike Beacon):."}
+{"sentence": "Downloads a COM scriptlet that redirects to Cobalt Strike payload:  Scheduled task 2:."}
+{"sentence": "Uses Javascript to download a Cobalt Strike Beacon:."}
+{"sentence": "Fileless payload delivery infrastructure  In the first phase of the attack, the attackers used a fileless in-memory payload delivery infrastructure consisting of the following components:."}
+{"sentence": "VBS and PowerShell-based loaders The attackers dropped Visual Basic and PowerShell scripts in folders that they created under the ProgramData (a hidden folder, by default)."}
+{"sentence": "The attackers created persistence using Windows’ registry, services and scheduled tasks."}
+{"sentence": "This persistence mechanism ensured that the loader scripts would execute either at startup or at predetermined intervals."}
+{"sentence": "Values found in Windows’ Registry: the VBS scripts are executed by Windows’ Wscript at startup:  The .vbs scripts as well as the .txt files contain the loader’s script, which launches PowerShell with a base64 encoded command, which either loads another PowerShell script (e.g Cobalt Strike Beacon) or fetches a payload from the command-and-control (C&C) server:  In-memory fileless payloads from C&C servers The payloads served by the C&C servers are mostly PowerShell scripts with embedded base64-encoded payloads (Metasploit and Cobalt Strike payloads):."}
+{"sentence": "PowerShell payload with embedded Shellcode downloading Cobalt Strike Beacon The decoded payload is a shellcode, whose purpose is to retrieve a Cobalt Strike Beacon from the C&C server:."}
+{"sentence": "Cobalt Strike Beacon embedded in obfuscated PowerShell A second type of an obfuscated PowerShell payload consisted of Cobalt Strike’s Beacon payload:  Less than 48 hours after Cybereason alerted the company about the breach, the attackers started to change their approach and almost completely abandoned the PowerShell infrastructure that they had been using - replacing it with sophisticated custom-built backdoors."}
+{"sentence": "Backdoors exploiting DLL-hijacking and using DNS tunneling After realizing that the PowerShell infrastructure had been discovered, the attackers had to quickly replace it to maintain persistence and continue the operation."}
+{"sentence": "During the second phase of the attack, the attackers introduced two sophisticated backdoors that they attempted to deploy on selected targets."}
+{"sentence": "The introduction of the backdoors is a key turning point in the investigation since it demonstrated the threat actor’s resourcefulness and skill-set."}
+{"sentence": "At the time of the attack, these backdoors were undetected and undocumented by any security vendor."}
+{"sentence": "Recently, Kaspersky researchers identified a variant of one of the backdoors as Backdoor.Win32.Denis."}
+{"sentence": "The attackers had to make sure that they remained undetected so the backdoors were designed to be as stealthy as possible."}
+{"sentence": "Backdoors exploiting DLL hijacking against trusted applications The backdoor exploited a vulnerability called “DLL hijacking” in order to “hide” the malware inside trusted software."}
+{"sentence": "Windows Search (vulnerable applications:  /) Fake DLL: msfte.dll (638b7b0536217c8923e856f4138d9caff7eb309d) Google Update (d30e8c7543adbc801d675068530b57d75cabb13f) Fake DLL: goopdate.dll (973b1ca8661be6651114edf29b10b31db4e218f7)  Kaspersky’s Avpia (691686839681adb345728806889925dc4eddb74e) Fake DLL: product_info.dll (3cf4b44c9470fb5bd0c16996c4b2a338502a7517) By exploiting legitimate software, the attackers bypassed application whitelisting and legitimate security software, allowing them to continue their operations without raising any suspicions."}
+{"sentence": "DNS Tunneling as C2 channel - In attempt to overcome network filtering solutions, the attackers implemented a stealthier C2 communication method, using “DNS Tunneling” – a method of C2 communicating and data exfiltration using the DNS protocol."}
+{"sentence": "To ensure that the DNS traffic would not be filtered, the attackers configured the backdoor to communicate with Google and OpenDNS DNS servers, since most organizations and security products will not filter traffic to those two major DNS services."}
+{"sentence": "The screenshot below shows the traffic generated by the backdoor and demonstrates DNS Tunneling for C2 communication."}
+{"sentence": "Novel MS Outlook backdoor and lateral movement spree In the third phase of the operation, the attackers harvested credentials stored on the compromised machines and performed lateral movement and infected new machines."}
+{"sentence": "The attackers also introduced a very rare and stealthy technique to communicate with their servers and exfiltrate data using Microsoft Outlook."}
+{"sentence": "Outlook macro backdoor In a relentless attempt to remain undetected, the attackers devised a very stealthy C2 channel that is hard to detect since it leverages an email-based C2 channel."}
+{"sentence": "The attackers installed a backdoor macro in Microsoft Outlook that enabled them to execute commands, deploy their tools and steal valuable data from the compromised machines."}
+{"sentence": "For a detailed analysis of the Outlook backdoor, please see the Attacker’s Arsenal section.  This technique works as follows:."}
+{"sentence": "Credential dumping and lateral movement The attackers used the famous Mimikatz credential dumping tool as their main tool to obtain credentials including user passwords, NTLM hashes and Kerberos tickets."}
+{"sentence": "Mimikatz is a very popular tool and is detected by most antivirus vendors and other security products."}
+{"sentence": "Therefore, the attackers used over 10 different customized Mimikatz payloads, which were obfuscated and packed in a way that allowed them to evade antivirus detection."}
+{"sentence": "The following are examples of Mimikatz command line arguments detected during the attack:  The stolen credentials were used to infect more machines, leveraging Windows built-in tools as well as pass-the-ticket and pass-the-hash attacks.  Phase four:."}
+{"sentence": "New arsenal and attempt to restore PowerShell infrastructure After a four week lull and no apparent malicious activity, the attackers returned to the scene and introduced new and improved tools aimed at bypassing the security mitigations that were implemented by the company’s IT team."}
+{"sentence": "These tools and methods mainly allowed them to bypass the PowerShell execution restrictions and password dumping mitigations."}
+{"sentence": "During that phase, Cybereason found a compromised server that was used as the main attacking machine, where the attackers stored their arsenal in a network share, which made it easier to spread their tools to other machines on the network."}
+{"sentence": "New variants of Denis and Goopy backdoors PowerShell Restriction Bypass Tool - Adapted from PSUnlock Github project."}
+{"sentence": "PowerShell Cobalt Strike Beacon - New payload + new C2 domain PowerShell Obfuscator - All the new PowerShell payloads are obfuscated using a publicly available script adapted from a Daniel Bohannon’s GitHub project."}
+{"sentence": "HookPasswordChange - Inspired by tools found on GitHub, this tool alerts the attackers if a password has been changed."}
+{"sentence": "Customized Windows Credentials Dumper - A PowerShell password dumper that is based on a known password dumping tool, using PowerShell bypass and reflective loading."}
+{"sentence": "The attackers specifically used it to obtain Outlook passwords."}
+{"sentence": "An analysis of this arsenal shows that the attackers went out of their way to restore the PowerShell-based infrastructure, even though it had already been detected and shut down once."}
+{"sentence": "The attackers’ preference to use a fileless infrastructure specifically in conjunction with Cobalt Strike is very evident."}
+{"sentence": "The ability to closely monitor and detect the stages of an entire APT lifecycle - from initial infiltration to data exfiltration - is far from trivial."}
